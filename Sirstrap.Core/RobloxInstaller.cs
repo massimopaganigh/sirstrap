@@ -15,10 +15,10 @@ namespace Sirstrap.Core
         {
             try
             {
-                var installPath = PathManager.GetVersionInstallPath(downloadConfiguration.Version);
+                var installDirectory = DirectoriesManager.GetInstallDirectory(downloadConfiguration.Version);
                 var zipPath = downloadConfiguration.GetOutputFileName();
 
-                Prepare(installPath);
+                Prepare(installDirectory);
 
                 try
                 {
@@ -26,11 +26,11 @@ namespace Sirstrap.Core
                     {
                         if (!string.IsNullOrEmpty(entry.Name))
                         {
-                            var installChildrenPath = Path.GetFullPath(Path.Combine(installPath, entry.FullName));
+                            var installChildrenDirectory = Path.GetFullPath(Path.Combine(installDirectory, entry.FullName));
 
-                            Directory.CreateDirectory(Path.GetDirectoryName(installChildrenPath)!);
+                            Directory.CreateDirectory(Path.GetDirectoryName(installChildrenDirectory)!);
 
-                            entry.ExtractToFile(installChildrenPath, true);
+                            entry.ExtractToFile(installChildrenDirectory, true);
                         }
                     }
                 }
@@ -41,7 +41,7 @@ namespace Sirstrap.Core
                     Log.Information("[*] Cleaning completed, {0} deleted.", zipPath);
                 }
 
-                Log.Information("[*] Installation completed, version {0} extracted to {1}.", downloadConfiguration.Version, installPath);
+                Log.Information("[*] Installation completed, version {0} extracted to {1}.", downloadConfiguration.Version, installDirectory);
             }
             catch (Exception ex)
             {
@@ -54,23 +54,23 @@ namespace Sirstrap.Core
         /// <summary>
         /// Prepares the installation directory by removing any existing files and creating a clean directory structure.
         /// </summary>
-        /// <param name="installPath">The target path where Roblox will be installed.</param>
+        /// <param name="installDirectory">The target directory where Roblox will be installed.</param>
         /// <exception cref="Exception">Thrown when directory preparation encounters an error.</exception>
-        private static void Prepare(string installPath)
+        private static void Prepare(string installDirectory)
         {
             try
             {
-                var installParentPath = Directory.GetParent(installPath)?.FullName;
+                var installParentDirectory = Directory.GetParent(installDirectory)?.FullName;
 
-                if (Directory.Exists(installParentPath))
+                if (Directory.Exists(installParentDirectory))
                 {
                     try // try-catch goofing around with directory deletion
                     {
-                        Directory.Delete(installParentPath, true);
+                        Directory.Delete(installParentDirectory, true);
                     }
                     catch
                     {
-                        foreach (var file in Directory.GetFiles(installParentPath, "*", SearchOption.AllDirectories))
+                        foreach (var file in Directory.GetFiles(installParentDirectory, "*", SearchOption.AllDirectories))
                         {
                             try // try-catch goofing around with file deletion
                             {
@@ -83,7 +83,7 @@ namespace Sirstrap.Core
                         }
                     }
 
-                    Directory.CreateDirectory(installPath);
+                    Directory.CreateDirectory(installDirectory);
                 }
             }
             catch (Exception ex)

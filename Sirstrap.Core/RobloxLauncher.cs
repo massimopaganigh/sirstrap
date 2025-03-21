@@ -14,7 +14,7 @@ namespace Sirstrap.Core
         /// <returns>True if the launch was successful; otherwise, false.</returns>
         public static bool Launch(DownloadConfiguration downloadConfiguration, bool waitForExit = false)
         {
-            var launchPath = Path.Combine(PathManager.GetVersionInstallPath(downloadConfiguration.Version), "RobloxPlayerBeta.exe");
+            var launchPath = Path.Combine(DirectoriesManager.GetInstallDirectory(downloadConfiguration.Version), "RobloxPlayerBeta.exe");
 
             if (File.Exists(launchPath))
             {
