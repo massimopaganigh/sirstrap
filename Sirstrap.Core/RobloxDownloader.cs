@@ -136,7 +136,7 @@ namespace Sirstrap.Core
         /// </remarks>
         private static bool LaunchApplication(DownloadConfiguration downloadConfiguration, bool waitForExit = false)
         {
-            return downloadConfiguration.BinaryType.Equals("WindowsPlayer", StringComparison.OrdinalIgnoreCase) && ApplicationLauncher.Launch(downloadConfiguration, waitForExit);
+            return downloadConfiguration.BinaryType.Equals("WindowsPlayer", StringComparison.OrdinalIgnoreCase) && RobloxLauncher.Launch(downloadConfiguration, waitForExit);
         }
 
         /// <summary>
@@ -181,7 +181,7 @@ namespace Sirstrap.Core
                 return;
             }
 
-            ApplicationInstaller.Install(downloadConfiguration);
+            RobloxInstaller.Install(downloadConfiguration);
 
             bool hasLaunchUrl = !string.IsNullOrEmpty(downloadConfiguration.LaunchUrl);
 
