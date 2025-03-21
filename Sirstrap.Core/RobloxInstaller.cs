@@ -122,6 +122,8 @@ namespace Sirstrap.Core
                         Thread.Sleep(100 * attempt);
                     }
                 }
+
+                throw new Exception();
             }
             catch (Exception ex)
             {

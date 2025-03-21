@@ -10,6 +10,7 @@ namespace Sirstrap.Core
     public class PackageManager(HttpClient httpClient)
     {
         private readonly HttpClient _httpClient = httpClient;
+        private readonly HttpClientExtension _httpClientExtension = new(httpClient);
 
         /// <summary>
         /// Downloads a macOS binary as a single ZIP archive file.
@@ -28,7 +29,7 @@ namespace Sirstrap.Core
 
             Log.Information("[*] Downloading ZIP archive for {0} ({1})...", downloadConfiguration.BinaryType, zipFileName);
 
-            var bytes = await HttpHelper.GetBytesAsync(_httpClient, UrlBuilder.GetBinaryUrl(downloadConfiguration, zipFileName)).ConfigureAwait(false);
+            var bytes = await _httpClientExtension.GetByteArraySafeAsync(UrlBuilder.GetBinaryUrl(downloadConfiguration, zipFileName)).ConfigureAwait(false);
 
             await File.WriteAllBytesAsync(downloadConfiguration.GetOutputFileName(), bytes).ConfigureAwait(false);
 
@@ -42,7 +43,7 @@ namespace Sirstrap.Core
         /// <returns>A task representing the asynchronous operation. The task result contains the manifest content as a string.</returns>
         public async Task<string> DownloadManifestAsync(DownloadConfiguration downloadConfiguration)
         {
-            return await HttpHelper.GetStringAsync(_httpClient, UrlBuilder.GetManifestUrl(downloadConfiguration)).ConfigureAwait(false);
+            return await _httpClientExtension.GetStringSafeAsync(UrlBuilder.GetManifestUrl(downloadConfiguration)).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -142,7 +143,7 @@ namespace Sirstrap.Core
         {
             Log.Information("[*] Downloading package {0}...", package);
 
-            var bytes = await HttpHelper.GetBytesAsync(_httpClient, UrlBuilder.GetPackageUrl(downloadConfiguration, package)).ConfigureAwait(false);
+            var bytes = await _httpClientExtension.GetByteArraySafeAsync(UrlBuilder.GetPackageUrl(downloadConfiguration, package)).ConfigureAwait(false);
 
             await PackageExtractor.ProcessPackageAsync(bytes, package, finalZip).ConfigureAwait(false);
         }
