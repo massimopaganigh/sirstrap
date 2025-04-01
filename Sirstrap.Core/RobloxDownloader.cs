@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Sirstrap.Core.Extensions;
 
 namespace Sirstrap.Core
 {
@@ -19,13 +20,10 @@ namespace Sirstrap.Core
         /// </remarks>
         public RobloxDownloader()
         {
-            var httpClient = new HttpClient
-            {
-                Timeout = TimeSpan.FromMinutes(5)
-            };
+            var httpClientExtension = new HttpClientExtension();
 
-            _versionManager = new VersionManager(httpClient);
-            _packageManager = new PackageManager(httpClient);
+            _versionManager = new VersionManager(httpClientExtension);
+            _packageManager = new PackageManager(httpClientExtension);
         }
 
         /// <summary>

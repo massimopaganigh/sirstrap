@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using Sirstrap.Core.Extensions;
 using System.Text.Json;
 
 namespace Sirstrap.Core
@@ -8,9 +9,9 @@ namespace Sirstrap.Core
     /// retrieve the latest versions from both SirHurt and official Roblox APIs, 
     /// compare them, and help users select the appropriate version.
     /// </summary>
-    public class VersionManager(HttpClient httpClient)
+    public class VersionManager(HttpClientExtension httpClientExtension)
     {
-        private readonly HttpClient _httpClient = httpClient;
+        private readonly HttpClientExtension _httpClientExtension = httpClientExtension;
 
         /// <summary>
         /// Retrieves the latest version for the specified binary type by first checking
@@ -84,7 +85,7 @@ namespace Sirstrap.Core
 
             try
             {
-                var response = await _httpClient.GetStringAsync(versionApiUrl).ConfigureAwait(false);
+                var response = await _httpClientExtension.GetStringAsync(versionApiUrl).ConfigureAwait(false);
 
                 using var jsonDocument = JsonDocument.Parse(response);
 
@@ -127,7 +128,7 @@ namespace Sirstrap.Core
         {
             try
             {
-                var response = await _httpClient.GetStringAsync("https://clientsettingscdn.roblox.com/v1/client-version/WindowsPlayer").ConfigureAwait(false);
+                var response = await _httpClientExtension.GetStringAsync("https://clientsettingscdn.roblox.com/v1/client-version/WindowsPlayer").ConfigureAwait(false);
 
                 using var jsonDocument = JsonDocument.Parse(response);
 
