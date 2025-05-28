@@ -8,20 +8,63 @@ namespace Sirstrap.Core.Models.Next
         private readonly HttpClient _httpClient = httpClient;
         private readonly SirstrapConfiguration _sirstrapConfiguration = sirstrapConfiguration;
 
-        public async Task SetVersionHashAsync(CancellationToken cancellationToken)
+        public async Task SetFromArgumentsAsync(string[] arguments, CancellationToken cancellationToken)
         {
             try
             {
-                if (BinaryType.Equals("WindowsPlayer"))
-                    if (_sirstrapConfiguration.FetchVersionFromSirHurt)
-                        VersionHash = await FetchVersionFromSirHurtAsync(cancellationToken).ConfigureAwait(false);
-                    else
-                        VersionHash = await FetchVersionAsync(cancellationToken).ConfigureAwait(false);
+                if (arguments == null
+                    || arguments.Length == 0)
+                    throw new ArgumentNullException(nameof(arguments));
+
+                LaunchUrl = arguments.FirstOrDefault(x => !x.StartsWith("--"), string.Empty);
+
+                if (string.IsNullOrEmpty(VersionHash))
+                    await SetVersionHashAsync(cancellationToken).ConfigureAwait(false);
+
+                CreateDirectories();
+                CreateFiles();
             }
             catch (Exception ex)
             {
-                Log.Error(ex, nameof(SetVersionHashAsync));
+                Log.Error(ex, nameof(SetFromArgumentsAsync));
             }
+        }
+
+        private async Task SetVersionHashAsync(CancellationToken cancellationToken)
+        {
+            if (BinaryType.Equals("WindowsPlayer"))
+                if (_sirstrapConfiguration.FetchVersionFromSirHurt)
+                    VersionHash = await FetchVersionFromSirHurtAsync(cancellationToken).ConfigureAwait(false);
+                else
+                    VersionHash = await FetchVersionAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        private void CreateDirectories()
+        {
+            if (Directory.Exists(SirstrapCacheSirstrapDirectory))
+                Directory.CreateDirectory(SirstrapCacheSirstrapDirectory);
+            else
+            {
+                Directory.Delete(SirstrapCacheSirstrapDirectory, true);
+                Directory.CreateDirectory(SirstrapCacheSirstrapDirectory);
+            }
+
+            if (!Directory.Exists(SirstrapCacheRobloxDirectory))
+                Directory.CreateDirectory(SirstrapCacheRobloxDirectory);
+            else
+            {
+                Directory.Delete(SirstrapCacheRobloxDirectory, true);
+                Directory.CreateDirectory(SirstrapCacheRobloxDirectory);
+            }
+
+            if (!Directory.Exists(SirstrapVersionsDirectory))
+                Directory.CreateDirectory(SirstrapVersionsDirectory);
+        }
+
+        private void CreateFiles()
+        {
+            if (!File.Exists(SirstrapConfigurationPath))
+                File.Create(SirstrapConfigurationPath).Dispose();
         }
 
         private async Task<string> FetchVersionAsync(CancellationToken cancellationToken)

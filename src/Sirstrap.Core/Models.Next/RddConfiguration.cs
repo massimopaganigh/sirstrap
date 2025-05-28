@@ -15,5 +15,17 @@
         public string BlobDirectory { get; set; } = "/";
 
         public string LaunchUrl { get; set; } = string.Empty;
+
+        #region DIRECTORIES
+        public string SirstrapCacheSirstrapDirectory { get; set; } = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Sirstrap\\Cache\\Sirstrap";
+
+        public string SirstrapCacheRobloxDirectory { get; set; } = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Sirstrap\\Cache\\Roblox";
+
+        public string SirstrapVersionsDirectory { get; set; } = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Sirstrap\\Versions";
+        #endregion
+
+        #region PATHS
+        public string SirstrapConfigurationPath { get; set; } = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\Sirstrap\\Configuration.ini";
+        #endregion
     }
 }
