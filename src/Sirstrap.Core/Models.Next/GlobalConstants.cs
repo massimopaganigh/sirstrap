@@ -2,6 +2,7 @@
 {
     public class GlobalConstants
     {
+        public const string ROBLOX_CDN_URI = "https://setup.rbxcdn.com";
         public const string ROBLOX_URI = "https://clientsettingscdn.roblox.com/v1/client-version/WindowsPlayer";
         public const string SIRHURT_URI = "https://sirhurt.net/status/fetch.php?exploit=SirHurt%20V5";
     }

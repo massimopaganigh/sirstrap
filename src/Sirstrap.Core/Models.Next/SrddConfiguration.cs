@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace Sirstrap.Core.Models.Next
 {
-    public class SrddConfiguration(HttpClient httpClient, SirstrapConfiguration sirstrapConfiguration) : RddConfiguration
+    public class SrddConfiguration(HttpClient httpClient, SirstrapConfiguration sirstrapConfiguration) : RddConfiguration, ISrddConfiguration
     {
         private readonly HttpClient _httpClient = httpClient;
         private readonly SirstrapConfiguration _sirstrapConfiguration = sirstrapConfiguration;
@@ -17,6 +17,9 @@ namespace Sirstrap.Core.Models.Next
                     throw new ArgumentNullException(nameof(arguments));
 
                 LaunchUrl = arguments.FirstOrDefault(x => !x.StartsWith("--"), string.Empty);
+                Roots = BinaryType.Equals("WindowsPlayer")
+                    ? PlayerRoots
+                    : StudioRoots;
 
                 if (string.IsNullOrEmpty(VersionHash))
                     await SetVersionHashAsync(cancellationToken).ConfigureAwait(false);

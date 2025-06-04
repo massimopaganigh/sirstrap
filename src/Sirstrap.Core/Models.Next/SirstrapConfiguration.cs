@@ -2,7 +2,7 @@
 {
     public class SirstrapConfiguration
     {
-        public string CdnUrl { get; set; } = "https://setup.rbxcdn.com";
+        public string CdnUrl { get; set; } = GlobalConstants.ROBLOX_CDN_URI;
 
         public bool FetchVersionFromSirHurt { get; set; }
 
