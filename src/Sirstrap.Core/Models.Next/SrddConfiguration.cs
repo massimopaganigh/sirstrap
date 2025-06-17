@@ -1,7 +1,4 @@
-﻿using Serilog;
-using System.Text.Json;
-
-namespace Sirstrap.Core.Models.Next
+﻿namespace Sirstrap.Core.Models.Next
 {
     public class SrddConfiguration(HttpClient httpClient, SirstrapConfiguration sirstrapConfiguration) : RddConfiguration, ISrddConfiguration
     {
